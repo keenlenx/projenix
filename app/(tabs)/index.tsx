@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import Fuse from 'fuse.js'; // Import Fuse.js
 
 import projectData from '../../assets/projects.json';
 
@@ -25,11 +26,20 @@ const HomeScreen = () => {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [filtersVisible, setFiltersVisible] = useState(false);
-  
+
+  // Fuse.js setup for fuzzy search
+  const fuse = useMemo(() => {
+    return new Fuse(projectData, {
+      keys: ['title', 'location'],
+      includeScore: true,
+      threshold: 0.3, // Adjust threshold (lower = stricter)
+    });
+  }, []);
+
   // For featured projects slider
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<Animated.ScrollView>(null);
-  
+
   // Auto-scroll the slider every 3 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -46,17 +56,19 @@ const HomeScreen = () => {
     navigation.navigate('Details', { id });
   };
 
-  // Filter and search projects
+  // Fuzzy search using Fuse.js
   const filteredProjects = useMemo(() => {
-    return projectData.filter(project => {
+    // Perform fuzzy search with Fuse.js if searchQuery is not empty
+    const results = searchQuery ? fuse.search(searchQuery) : [];
+    const searchResults = results.length > 0 ? results.map(result => result.item) : projectData;
+
+    // Filter by category and status
+    return searchResults.filter(project => {
       const matchesCategory = !categoryFilter || project.category === categoryFilter;
       const matchesStatus = !statusFilter || project.status === statusFilter;
-      const matchesSearch =
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.location.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesStatus && matchesSearch;
+      return matchesCategory && matchesStatus;
     });
-  }, [categoryFilter, statusFilter, searchQuery]);
+  }, [categoryFilter, statusFilter, searchQuery, fuse]);
 
   // Group by category > status
   const groupedProjects = useMemo(() => {
@@ -72,6 +84,11 @@ const HomeScreen = () => {
   const resetFilters = () => {
     setCategoryFilter(null);
     setStatusFilter(null);
+  };
+
+  // Reset search query
+  const resetSearch = () => {
+    setSearchQuery('');
   };
 
   // Featured projects (first 8 items)
@@ -114,7 +131,7 @@ const HomeScreen = () => {
           style={styles.searchInput}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearIcon}>
+          <TouchableOpacity onPress={resetSearch} style={styles.clearIcon}>
             <Ionicons name="close-circle" size={20} color="#fff" />
           </TouchableOpacity>
         )}
@@ -194,8 +211,8 @@ const HomeScreen = () => {
                     >
                       <Image source={{ uri: item.image }} style={styles.projectImage} />
                       <Text style={styles.projectTitle}>{item.title}</Text>
+                      <Text style={styles.projectLocation}>{item.location}</Text> {/* Location on a new line */}
                       <View style={styles.projectDetails}>
-                        <Text style={styles.projectDetail}>{item.location}</Text>
                         <Text style={[styles.projectDetail, styles.projectStatus]}>
                           {item.status} • {item.category}
                         </Text>
@@ -269,23 +286,26 @@ const styles = StyleSheet.create({
     color: '#fff',
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 8,
-    fontSize: 14,
+    paddingVertical: 10,
+    fontSize: 16,
   },
   clearIcon: {
-    padding: 8,
+    padding: 5,
   },
   filterIcon: {
-    padding: 8,
+    padding: 5,
   },
   filterContainer: {
-    paddingHorizontal: 20,
-    marginBottom: 10,
+    marginTop: 80,
+    backgroundColor: '#222',
+    padding: 15,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   filterTitle: {
     color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
   },
   filterGroup: {
     flexDirection: 'row',
@@ -293,82 +313,91 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   filterLabel: {
-    color: '#ccc',
+    color: '#fff',
+    fontSize: 16,
     marginRight: 10,
   },
   filterButton: {
+    backgroundColor: '#333',
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#333',
-    borderRadius: 15,
-    marginRight: 8,
+    borderRadius: 10,
+    marginRight: 10,
   },
   activeFilter: {
-    backgroundColor: '#555',
+    backgroundColor: '#008CFF',
   },
   filterButtonText: {
     color: '#fff',
     fontSize: 14,
   },
   resetButton: {
-    alignSelf: 'flex-end',
-    padding: 8,
+    backgroundColor: '#f00',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
   },
   resetButtonText: {
-    color: '#4CAF50',
+    color: '#fff',
     fontSize: 14,
+    textAlign: 'center',
   },
   resultsText: {
-    color: '#aaa',
-    fontSize: 14,
-    paddingHorizontal: 20,
-    marginBottom: 10,
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 20,
+    marginTop: 10,
   },
   groupSection: {
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    marginVertical: 10,
   },
   groupTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 20,
     marginBottom: 10,
   },
   projectCard: {
     backgroundColor: '#222',
-    padding: 10,
     borderRadius: 10,
     marginRight: 15,
-    width: 150,  // Smaller card width
+    width: screenWidth * 0.45,  // Adjust card width to fit the screen without overflow
+    padding: 10,
+    marginBottom: 20,
   },
   projectImage: {
     width: '100%',
-    height: 100, // Smaller image size
-    borderRadius: 10,
-    marginBottom: 10,
+    height: 100,
+    borderRadius: 8,
   },
   projectTitle: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginVertical: 5,
+  },
+  projectLocation: {
+    color: '#bbb',
+    fontSize: 12,
+    marginBottom: 5, // Give some space between title and location
   },
   projectDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
   },
   projectDetail: {
-    color: '#aaa',
+    color: '#bbb',
     fontSize: 12,
   },
   projectStatus: {
-    color: '#4CAF50',
+    marginLeft: 5,
   },
   projectPrice: {
-    color: '#FFC107',
+    color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',
+    marginTop: 5,
   },
 });
 
