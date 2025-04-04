@@ -1,0 +1,502 @@
+[
+    {
+      "id": 1,
+      "title": "Skyline Tower",
+      "image": "https://images.unsplash.com/photo-1487958449943-2429e8be8625",
+      "price": 1000000,
+      "location": "New York",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Modern high-rise with panoramic city views featuring floor-to-ceiling windows, smart home technology, and rooftop amenities including a pool and lounge area."
+    },
+    {
+      "id": 2,
+      "title": "Sunset Heights",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 2500000,
+      "location": "Los Angeles",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Luxury hillside estate with infinity pool, home theater, and smart home features. Private gated community with 24/7 security."
+    },
+    {
+      "id": 3,
+      "title": "Ocean Breeze Residences",
+      "image": "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2",
+      "price": 1800000,
+      "location": "Miami",
+      "category": "Affordable",
+      "status": "Ongoing",
+      "description": "Beachfront condos with direct ocean access, community pool, and fitness center. Walking distance to restaurants and nightlife."
+    },
+    {
+      "id": 4,
+      "title": "Green Park Villas",
+      "image": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
+      "price": 2200000,
+      "location": "Chicago",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Suburban luxury villas with private gardens, smart home systems, and community clubhouse. Excellent school district."
+    },
+    {
+      "id": 5,
+      "title": "Cityscape Towers",
+      "image": "https://images.unsplash.com/photo-1517502884422-41eaead166d4",
+      "price": 3500000,
+      "location": "San Francisco",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Iconic high-rise with tech-enabled living spaces, concierge service, and panoramic bay views. Walking score of 98."
+    },
+    {
+      "id": 6,
+      "title": "Riverside Apartments",
+      "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+      "price": 800000,
+      "location": "Seattle",
+      "category": "Affordable",
+      "status": "Ongoing",
+      "description": "Modern riverfront living with community garden, bike storage, and pet-friendly policies. Close to tech hubs and downtown."
+    },
+    {
+      "id": 7,
+      "title": "Mountain View Residences",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "price": 2400000,
+      "location": "Denver",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Luxury mountain contemporary homes with heated floors, private hot tubs, and ski-in/ski-out access in winter months."
+    },
+    {
+      "id": 8,
+      "title": "Urban Heights",
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",
+      "price": 1200000,
+      "location": "Los Angeles",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Recently completed modern apartments with rooftop deck, coworking spaces, and EV charging stations. Transit-oriented development."
+    },
+    {
+      "id": 9,
+      "title": "Parkside Towers",
+      "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858",
+      "price": 2300000,
+      "location": "Chicago",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Newly completed luxury high-rise with park views, 24-hour concierge, and resident lounge with catering kitchen."
+    },
+    {
+      "id": 10,
+      "title": "Sunrise Condos",
+      "image": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "price": 950000,
+      "location": "Miami",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Bright and airy condominiums with water views, resort-style pool, and fitness center. Hurricane-impact windows throughout."
+    },
+    {
+      "id": 11,
+      "title": "Oceanfront Villas",
+      "image": "https://images.unsplash.com/photo-1529408686214-b48b8532f72c",
+      "price": 3200000,
+      "location": "San Diego",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Luxury beachfront living with private beach access, smart home features, and designer finishes throughout."
+    },
+    {
+      "id": 12,
+      "title": "Skyline Residences",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 2700000,
+      "location": "New York",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Full-service luxury condominium with panoramic views, white-glove concierge, and resident-only amenities floor."
+    },
+    {
+      "id": 13,
+      "title": "The Grand Palace",
+      "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914",
+      "price": 6000000,
+      "location": "Los Angeles",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Opulent estate with 12 bedrooms, home theater, wine cellar, and 2-acre landscaped grounds with infinity pool."
+    },
+    {
+      "id": 14,
+      "title": "Majestic Towers",
+      "image": "https://images.unsplash.com/photo-1513584684374-8bab748fbf90",
+      "price": 5000000,
+      "location": "San Francisco",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Landmark residential tower featuring penthouses with private elevators, smart home systems, and 360-degree views."
+    },
+    {
+      "id": 15,
+      "title": "Royal Residences",
+      "image": "https://images.unsplash.com/photo-1554469384-e58fac16e23a",
+      "price": 5500000,
+      "location": "Miami",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Ultra-luxury waterfront condos with private boat slips, spa facilities, and 24/7 security and concierge."
+    },
+    {
+      "id": 16,
+      "title": "Platinum Mansions",
+      "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
+      "price": 7000000,
+      "location": "Chicago",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Gated community of custom estates with smart home technology, home theaters, and indoor pools in select units."
+    },
+    {
+      "id": 17,
+      "title": "Crystal Castle",
+      "image": "https://images.unsplash.com/photo-1560448204-603b3fc33ddc",
+      "price": 8000000,
+      "location": "San Diego",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Architectural masterpiece with glass walls, infinity edge pool, and smart home automation throughout the 15,000 sq ft estate."
+    },
+    {
+      "id": 18,
+      "title": "Sunny Grove Homes",
+      "image": "https://images.unsplash.com/photo-1460317442991-0ec209397118",
+      "price": 650000,
+      "location": "Los Angeles",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Charming single-family homes with solar panels, energy-efficient appliances, and community playground."
+    },
+    {
+      "id": 19,
+      "title": "Greenleaf Estates",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "price": 750000,
+      "location": "Miami",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Sustainable living community with LEED certification, community garden, and electric vehicle charging stations."
+    },
+    {
+      "id": 20,
+      "title": "Eagle's Nest",
+      "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+      "price": 850000,
+      "location": "Denver",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Mountain-view townhomes with energy-efficient design, community clubhouse, and easy access to hiking trails."
+    },
+    {
+      "id": 21,
+      "title": "Maple Ridge Apartments",
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",
+      "price": 450000,
+      "location": "Denver",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Value-oriented apartments with community laundry, on-site management, and easy access to public transportation."
+    },
+    {
+      "id": 22,
+      "title": "Willow Park Villas",
+      "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858",
+      "price": 550000,
+      "location": "Chicago",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Townhome community with attached garages, small backyard spaces, and community playground."
+    },
+    {
+      "id": 23,
+      "title": "Riverbend Flats",
+      "image": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "price": 650000,
+      "location": "Seattle",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Modern flats with river views, bike storage, and pet-friendly policies. Walking distance to tech campuses."
+    },
+    {
+      "id": 24,
+      "title": "Harbor Lights",
+      "image": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4",
+      "price": 2800000,
+      "location": "Boston",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Waterfront living with private docks, concierge service, and panoramic harbor views from floor-to-ceiling windows."
+    },
+    {
+      "id": 25,
+      "title": "The Metropolitan",
+      "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+      "price": 1900000,
+      "location": "Washington DC",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Urban sophistication meets modern luxury in this high-rise featuring a rooftop terrace with Capitol views."
+    },
+    {
+      "id": 26,
+      "title": "Pine Valley Estates",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 3200000,
+      "location": "Aspen",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Ski-in/ski-out luxury homes with heated driveways, private hot tubs, and mountain contemporary architecture."
+    },
+    {
+      "id": 27,
+      "title": "The Hamilton",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "price": 1800000,
+      "location": "Philadelphia",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Historic charm meets modern luxury in these fully renovated brownstones with smart home technology."
+    },
+    {
+      "id": 28,
+      "title": "Azure Bay",
+      "image": "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2",
+      "price": 4200000,
+      "location": "Naples",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Gulf-front luxury condos with private beach access, resort-style pool, and full-service marina."
+    },
+    {
+      "id": 29,
+      "title": "The Fitzgerald",
+      "image": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
+      "price": 2200000,
+      "location": "Charlotte",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Uptown living at its finest with rooftop pool, fitness center, and walkability to the city's best dining."
+    },
+    {
+      "id": 30,
+      "title": "Terra Nova",
+      "image": "https://images.unsplash.com/photo-1517502884422-41eaead166d4",
+      "price": 1600000,
+      "location": "Austin",
+      "category": "Luxury",
+      "status": "Ongoing",
+      "description": "Modern eco-friendly homes with solar panels, rainwater collection systems, and smart irrigation in the yard."
+    },
+    {
+      "id": 31,
+      "title": "The Charleston",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "price": 2900000,
+      "location": "Charleston",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Historic district homes with modern interiors, private courtyards, and walking distance to the waterfront."
+    },
+    {
+      "id": 32,
+      "title": "Marina Del Sol",
+      "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+      "price": 3800000,
+      "location": "San Diego",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Luxury waterfront condos with deep-water boat slips, resort-style amenities, and 24-hour security."
+    },
+    {
+      "id": 33,
+      "title": "The Vanderbilt",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 4500000,
+      "location": "Nashville",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Music Row luxury living with recording studios in select units, rooftop lounge, and concierge service."
+    },
+    {
+      "id": 34,
+      "title": "Parkside Lofts",
+      "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858",
+      "price": 950000,
+      "location": "Portland",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Converted warehouse spaces with exposed brick, high ceilings, and walking distance to downtown parks."
+    },
+    {
+      "id": 35,
+      "title": "The Edison",
+      "image": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "price": 1200000,
+      "location": "Detroit",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Historic building converted to modern lofts with industrial-chic design and community workspace."
+    },
+    {
+      "id": 36,
+      "title": "Harborview Terrace",
+      "image": "https://images.unsplash.com/photo-1529408686214-b48b8532f72c",
+      "price": 1800000,
+      "location": "Baltimore",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Waterfront condos with private balconies, fitness center, and walking distance to Inner Harbor attractions."
+    },
+    {
+      "id": 37,
+      "title": "The Magnolia",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 2200000,
+      "location": "Dallas",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Upscale urban living with resort-style pool, dog park, and concierge service in the arts district."
+    },
+    {
+      "id": 38,
+      "title": "Cascade Heights",
+      "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914",
+      "price": 1500000,
+      "location": "Seattle",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Modern high-rise with mountain views, electric car charging stations, and walking distance to tech campuses."
+    },
+    {
+      "id": 39,
+      "title": "The Roosevelt",
+      "image": "https://images.unsplash.com/photo-1513584684374-8bab748fbf90",
+      "price": 1900000,
+      "location": "Chicago",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Historic building with modern luxury interiors, rooftop deck with city views, and 24-hour door staff."
+    },
+    {
+      "id": 40,
+      "title": "The Aurora",
+      "image": "https://images.unsplash.com/photo-1554469384-e58fac16e23a",
+      "price": 2100000,
+      "location": "Denver",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Mountain contemporary condos with ski storage, rooftop hot tubs, and views of the Front Range."
+    },
+    {
+      "id": 41,
+      "title": "Garden District Homes",
+      "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
+      "price": 850000,
+      "location": "New Orleans",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Charming shotgun homes with updated interiors, private courtyards, and walking distance to Magazine Street."
+    },
+    {
+      "id": 42,
+      "title": "The Lexington",
+      "image": "https://images.unsplash.com/photo-1560448204-603b3fc33ddc",
+      "price": 1200000,
+      "location": "Lexington",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Horse country estates with acreage, barns, and classic Southern architecture with modern interiors."
+    },
+    {
+      "id": 43,
+      "title": "Pioneer Square",
+      "image": "https://images.unsplash.com/photo-1460317442991-0ec209397118",
+      "price": 950000,
+      "location": "Seattle",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "Historic district lofts with exposed brick, high ceilings, and walking distance to stadiums and waterfront."
+    },
+    {
+      "id": 44,
+      "title": "The Berkshire",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "price": 1800000,
+      "location": "Boston",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Back Bay luxury with concierge service, roof deck with city views, and walking distance to Newbury Street."
+    },
+    {
+      "id": 45,
+      "title": "River Oaks",
+      "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+      "price": 3500000,
+      "location": "Houston",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Luxury estates with resort-style pools, smart home technology, and gated community security."
+    },
+    {
+      "id": 46,
+      "title": "The Dakota",
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",
+      "price": 4200000,
+      "location": "New York",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Iconic Upper West Side cooperative with prewar details, modern updates, and Central Park views."
+    },
+    {
+      "id": 47,
+      "title": "The Whitman",
+      "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858",
+      "price": 2800000,
+      "location": "Philadelphia",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Rittenhouse Square luxury with doorman, fitness center, and walking distance to top restaurants."
+    },
+    {
+      "id": 48,
+      "title": "The Alamo",
+      "image": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "price": 1900000,
+      "location": "San Antonio",
+      "category": "Affordable",
+      "status": "Completed",
+      "description": "River Walk adjacent condos with resort-style pool, fitness center, and walking distance to attractions."
+    },
+    {
+      "id": 49,
+      "title": "The Catalina",
+      "image": "https://images.unsplash.com/photo-1529408686214-b48b8532f72c",
+      "price": 2200000,
+      "location": "Tucson",
+      "category": "Luxury",
+      "status": "Completed",
+      "description": "Desert contemporary homes with mountain views, private pools, and energy-efficient design."
+    },
+    {
+      "id": 50,
+      "title": "The Palisades",
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750",
+      "price": 5200000,
+      "location": "Los Angeles",
+      "category": "Luxury",
+      "status": "Upcoming",
+      "description": "Cliffside estates with panoramic ocean views, infinity pools, and smart home automation throughout."
+    }
+  ]
