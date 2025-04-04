@@ -1,335 +1,375 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, RefreshControl, Modal, Dimensions, Platform, FlatList } from 'react-native';
-import { debounce } from "lodash";
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+  Image,
+  TextInput,
+  ScrollView,
+  Dimensions,
+  Animated,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Sample JSON file data
-import projectData from "../../assets/projects.json";
+import projectData from '../../assets/projects.json';
 
-export default function RealEstateLanding() {
+const { width: screenWidth } = Dimensions.get('window');
+
+const HomeScreen = () => {
   const navigation = useNavigation();
-  const [selectedProject, setSelectedProject] = useState(projectData[0]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
-
-  const isMobile = Dimensions.get("window").width <= 768;
-  const isWeb = Platform.OS === "web";
-
-  // Debounced search input handler
-  const handleSearchChange = (query) => {
-    setSearchQuery(query || ''); 
-    setDebouncedSearchQuery(query || ''); 
-  };
-
-  const debouncedSearch = useCallback(
-    debounce((query) => {
-      const filtered = filterProjects(query || ''); 
-      setFilteredProjects(filtered.slice(0, 4)); 
-    }, 300),
-    []
-  );
-
-  const filterProjects = (query) => {
-    return projectData.filter((project) => {
-      const title = project.title || ''; 
-      const description = project.description || ''; 
-
-      return (
-        title.toLowerCase().includes(query.toLowerCase()) ||
-        description.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-  };
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  
+  // For featured projects slider
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  
+  // Auto-scroll the slider every 3 seconds
   useEffect(() => {
-    debouncedSearch(debouncedSearchQuery || ''); 
-  }, [debouncedSearchQuery]);
+    const intervalId = setInterval(() => {
+      scrollViewRef.current?.scrollTo({
+        x: (scrollX.__getValue() + screenWidth) % (screenWidth * 8),
+        animated: true,
+      });
+    }, 3000);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setSearchQuery(""); 
-    setTimeout(() => setRefreshing(false), 1000);
-  }, []);
+    return () => clearInterval(intervalId);
+  }, [scrollX]);
 
-  const handleProjectSelect = (project) => {
-    setSelectedProject(project);
-    setModalVisible(true); 
+  const handleProjectSelect = (id: number) => {
+    navigation.navigate('Details', { id });
   };
 
-  const clearSearch = () => setSearchQuery("");
+  // Filter and search projects
+  const filteredProjects = useMemo(() => {
+    return projectData.filter(project => {
+      const matchesCategory = !categoryFilter || project.category === categoryFilter;
+      const matchesStatus = !statusFilter || project.status === statusFilter;
+      const matchesSearch =
+        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.location.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesStatus && matchesSearch;
+    });
+  }, [categoryFilter, statusFilter, searchQuery]);
 
-  const navigateToDetails = () => {
-    navigation.navigate('Details', { id: selectedProject.id });
-    setModalVisible(false); 
+  // Group by category > status
+  const groupedProjects = useMemo(() => {
+    const groups: Record<string, Record<string, typeof projectData>> = {};
+    filteredProjects.forEach(project => {
+      if (!groups[project.category]) groups[project.category] = {};
+      if (!groups[project.category][project.status]) groups[project.category][project.status] = [];
+      groups[project.category][project.status].push(project);
+    });
+    return groups;
+  }, [filteredProjects]);
+
+  const resetFilters = () => {
+    setCategoryFilter(null);
+    setStatusFilter(null);
   };
 
-  // Group projects by both category and status
-  const categorizedAndStatusGroupedProjects = projectData.reduce((acc, project) => {
-    const { category, status } = project;
-
-    if (!acc[category]) acc[category] = {};
-    if (!acc[category][status]) acc[category][status] = [];
-    acc[category][status].push(project);
-    
-    return acc;
-  }, {});
+  // Featured projects (first 8 items)
+  const featuredProjects = projectData.slice(0, 8);
 
   return (
-    <FlatList
-      style={styles.list}
-      data={[1]} // Dummy data just to render the list
-      keyExtractor={(item) => item.toString()} 
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      renderItem={() => (
-        <>
-          <View style={[styles.searchContainer, isWeb && styles.searchContainerWeb]}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search projects..."
-              placeholderTextColor="gray"
-              value={searchQuery}
-              onChangeText={handleSearchChange}
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={clearSearch} style={styles.clearSearchButton}>
-                <Text style={styles.clearSearchText}>clear</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {searchQuery.length > 0 && (
-            <View style={styles.suggestionsContainer}>
-              <FlatList
-                data={filteredProjects}
-                renderItem={({ item }) => (
-                  <TouchableOpacity style={styles.suggestionCard} onPress={() => handleProjectSelect(item)}>
-                    <Text style={styles.suggestionText}>{item.title}</Text>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            </View>
-          )}
-
-          <View style={[styles.heroSection, isWeb && styles.heroSectionWeb]}>
-            <Image source={{ uri: selectedProject.image }} style={[styles.heroImage, isWeb && styles.heroImageWeb]} />
-            <Text style={styles.heroTitle}>{selectedProject.title}</Text>
+    <View style={styles.container}>
+      {/* Hero / Featured Projects Slider */}
+      <View style={styles.heroContainer}>
+        <Animated.ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          ref={scrollViewRef}
+        >
+          {featuredProjects.map((project, index) => (
             <TouchableOpacity
-              style={[styles.moreDetailsButton, isWeb && styles.moreDetailsButtonWeb]}
-              onPress={() => setModalVisible(true)}
+              key={project.id}
+              onPress={() => handleProjectSelect(project.id)}
+              style={styles.heroCard}
             >
-              <Text style={styles.moreDetailsText}>More Details</Text>
-            </TouchableOpacity>
-          </View>
-
-          {Object.keys(categorizedAndStatusGroupedProjects).map((category) => (
-            Object.keys(categorizedAndStatusGroupedProjects[category]).map((status) => (
-              categorizedAndStatusGroupedProjects[category][status].length > 0 && (
-                <View key={`${category}-${status}`}>
-                  <Text style={styles.sectionTitle}>{`${category} - ${status}`}</Text>
-                  <FlatList
-                    horizontal
-                    data={categorizedAndStatusGroupedProjects[category][status]}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => handleProjectSelect(item)}>
-                        <Image source={{ uri: item.image }} style={styles.projectImage} />
-                        <Text style={styles.projectTitle}>{item.title}</Text>
-                      </TouchableOpacity>
-                    )}
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.projectScrollView}
-                  />
-                </View>
-              )
-            ))
-          ))}
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isModalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <View style={styles.modalBackground}>
-              <View style={styles.modalContainer}>
-                <Image source={{ uri: selectedProject.image }} style={styles.modalImage} />
-                <Text style={styles.modalTitle}>{selectedProject.title}</Text>
-                <Text style={styles.modalDescription}>{selectedProject.description}</Text>
-                <TouchableOpacity style={styles.modalCloseButton} onPress={() => setModalVisible(false)}>
-                  <Text style={styles.modalCloseText}>Close</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewDetailsButton} onPress={navigateToDetails}>
-                  <Text style={styles.viewDetailsText}>View</Text>
-                </TouchableOpacity>
+              <Image source={{ uri: project.image }} style={styles.heroImage} />
+              <View style={styles.heroOverlay}>
+                <Text style={styles.heroTitle}>{project.title}</Text>
+                <Text style={styles.heroSubtitle}>{project.location}</Text>
               </View>
+            </TouchableOpacity>
+          ))}
+        </Animated.ScrollView>
+      </View>
+
+      {/* Search bar floating on top */}
+      <View style={styles.searchFilterBar}>
+        <TextInput
+          placeholder="Search by title or location"
+          placeholderTextColor="#888"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearIcon}>
+            <Ionicons name="close-circle" size={20} color="#fff" />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={() => setFiltersVisible(prev => !prev)} style={styles.filterIcon}>
+          <Ionicons name="filter" size={24} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Filters Panel */}
+      {filtersVisible && (
+        <View style={styles.filterContainer}>
+          <Text style={styles.filterTitle}>Filters:</Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.filterGroup}>
+              <Text style={styles.filterLabel}>Category:</Text>
+              {['All', 'Luxury', 'Affordable'].map(cat => {
+                const value = cat === 'All' ? null : cat;
+                return (
+                  <Pressable
+                    key={cat}
+                    style={[styles.filterButton, categoryFilter === value && styles.activeFilter]}
+                    onPress={() => setCategoryFilter(value)}
+                  >
+                    <Text style={styles.filterButtonText}>{cat}</Text>
+                  </Pressable>
+                );
+              })}
             </View>
-          </Modal>
-        </>
+          </ScrollView>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.filterGroup}>
+              <Text style={styles.filterLabel}>Status:</Text>
+              {['All', 'Ongoing', 'Completed'].map(stat => {
+                const value = stat === 'All' ? null : stat;
+                return (
+                  <Pressable
+                    key={stat}
+                    style={[styles.filterButton, statusFilter === value && styles.activeFilter]}
+                    onPress={() => setStatusFilter(value)}
+                  >
+                    <Text style={styles.filterButtonText}>{stat}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </ScrollView>
+
+          {(categoryFilter || statusFilter) && (
+            <Pressable style={styles.resetButton} onPress={resetFilters}>
+              <Text style={styles.resetButtonText}>Reset Filters</Text>
+            </Pressable>
+          )}
+        </View>
       )}
-    />
+
+      {/* Results Count */}
+      <Text style={styles.resultsText}>
+        Showing {filteredProjects.length} of {projectData.length} projects
+      </Text>
+
+      {/* Grouped List */}
+      <ScrollView>
+        {Object.entries(groupedProjects).map(([category, statuses]) => (
+          <View key={category}>
+            {Object.entries(statuses).map(([status, projects]) => (
+              <View key={`${category}-${status}`} style={styles.groupSection}>
+                <Text style={styles.groupTitle}>{category} - {status}</Text>
+                <FlatList
+                  horizontal
+                  data={projects}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => handleProjectSelect(item.id)}
+                      style={styles.projectCard}
+                    >
+                      <Image source={{ uri: item.image }} style={styles.projectImage} />
+                      <Text style={styles.projectTitle}>{item.title}</Text>
+                      <View style={styles.projectDetails}>
+                        <Text style={styles.projectDetail}>{item.location}</Text>
+                        <Text style={[styles.projectDetail, styles.projectStatus]}>
+                          {item.status} • {item.category}
+                        </Text>
+                      </View>
+                      <Text style={styles.projectPrice}>${item.price.toLocaleString()}</Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.id.toString()}
+                />
+              </View>
+            ))}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  list: {
+  container: {
     flex: 1,
-    backgroundColor: "#111",
-    marginTop: 30
+    backgroundColor: '#111',
   },
-  searchContainer: {
-    width: "80%",
-    alignSelf: "center",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 25,
+  heroContainer: {
+    width: screenWidth,
+    height: 250,
+    marginBottom: 20,
+    position: 'relative',
+  },
+  heroCard: {
+    width: screenWidth,
+    height: 250,
+    position: 'relative',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  heroOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    left: 15,
+    right: 15,
+    backgroundColor: 'rgba(0,0,0,0.4)',
     padding: 10,
-    zIndex: 100,
-    marginTop: 20,
+    borderRadius: 10,
   },
-  searchContainerWeb: {
-    width: "40%",
-    top: "15%",
+  heroTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  heroSubtitle: {
+    color: '#ccc',
+    fontSize: 14,
+  },
+  searchFilterBar: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    zIndex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   searchInput: {
     flex: 1,
-    color: "black",
-    fontSize: 16,
-  },
-  clearSearchButton: {
-    margin: 10,
-    padding: 5,
-  },
-  clearSearchText: {
-    color: "orange",
-    fontWeight: "normal",
-  },
-  suggestionsContainer: {
-    position: "absolute",
-    top: 80,
-    left: "10%",
-    right: "10%",
-    backgroundColor: "white",
-    borderRadius: 8,
-    shadowColor: "rgba(0, 0, 0, 0.2)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    zIndex: 999,
-    maxHeight: 200,
-  },
-  suggestionCard: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#f1f1f1",
-  },
-  suggestionText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  heroSection: {
-    padding: 20,
-    alignItems: "center",
-  },
-  heroSectionWeb: {
-    padding: 40,
-  },
-  heroImage: {
-    width: "100%",
-    height: 400,
+    backgroundColor: '#222',
+    color: '#fff',
     borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    fontSize: 14,
   },
-  heroImageWeb: {
-    height: 500,
+  clearIcon: {
+    padding: 8,
   },
-  heroTitle: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 10,
+  filterIcon: {
+    padding: 8,
   },
-  moreDetailsButton: {
-    backgroundColor: "green",
-    padding: 10,
-    marginTop: 10,
-  },
-  moreDetailsButtonWeb: {
-    padding: 15,
-  },
-  moreDetailsText: {
-    color: "white",
-    fontSize: 16,
-  },
-  sectionTitle: {
-    color: "white",
-    fontSize: 22,
-    marginLeft: 20,
+  filterContainer: {
+    paddingHorizontal: 20,
     marginBottom: 10,
   },
-  projectScrollView: {
-    paddingLeft: 20,
+  filterTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  filterGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  filterLabel: {
+    color: '#ccc',
+    marginRight: 10,
+  },
+  filterButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#333',
+    borderRadius: 15,
+    marginRight: 8,
+  },
+  activeFilter: {
+    backgroundColor: '#555',
+  },
+  filterButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  resetButton: {
+    alignSelf: 'flex-end',
+    padding: 8,
+  },
+  resetButtonText: {
+    color: '#4CAF50',
+    fontSize: 14,
+  },
+  resultsText: {
+    color: '#aaa',
+    fontSize: 14,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  groupSection: {
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  groupTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  projectCard: {
+    backgroundColor: '#222',
+    padding: 10,
+    borderRadius: 10,
+    marginRight: 15,
+    width: 150,  // Smaller card width
   },
   projectImage: {
-    width: 120,
-    height: 180,
-    marginRight: 10,
+    width: '100%',
+    height: 100, // Smaller image size
     borderRadius: 10,
+    marginBottom: 10,
   },
   projectTitle: {
-    color: "white",
-    textAlign: "center",
-    marginTop: 5,
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  projectDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
   },
-  modalContainer: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    width: Dimensions.get("window").width - 40,
-    alignItems: "center",
+  projectDetail: {
+    color: '#aaa',
+    fontSize: 12,
   },
-  modalImage: {
-    width: "100%",
-    height: 250,
-    borderRadius: 10,
+  projectStatus: {
+    color: '#4CAF50',
   },
-  modalTitle: {
-    color: "black",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  modalDescription: {
-    color: "black",
-    fontSize: 16,
-    marginTop: 10,
-    textAlign: "center",
-  },
-  modalCloseButton: {
-    backgroundColor: "red",
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 5,
-  },
-  modalCloseText: {
-    color: "white",
-    fontSize: 16,
-  },
-  viewDetailsButton: {
-    backgroundColor: "green",
-    padding: 10,
-    marginTop: 10,
-  },
-  viewDetailsText: {
-    color: "white",
-    fontSize: 16,
+  projectPrice: {
+    color: '#FFC107',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
+
+export default HomeScreen;

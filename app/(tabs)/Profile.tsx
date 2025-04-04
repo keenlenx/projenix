@@ -1,225 +1,297 @@
-// HomeScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SectionList, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Sample data (replace with actual data fetching if needed)
-import projectData from '../../assets/projects.json';
+const ProfilePage = () => {
+  // Sample project data - replace with your actual data
+  const projects = [
+    {
+      id: '1',
+      title: 'Luxury Waterfront Condos',
+      location: 'Miami, FL',
+      image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2',
+      status: 'Completed',
+      price: '$2.5M',
+      date: 'Jun 2023'
+    },
+    {
+      id: '2',
+      title: 'Urban Loft Apartments',
+      location: 'New York, NY',
+      image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb',
+      status: 'In Progress',
+      price: '$1.8M',
+      date: 'Expected Dec 2024'
+    },
+    {
+      id: '3',
+      title: 'Suburban Family Homes',
+      location: 'Austin, TX',
+      image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914',
+      status: 'Planning',
+      price: '$950K',
+      date: 'Expected Mar 2025'
+    },
+  ];
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
-
-  // Handle selecting a project and navigating to its details
-  const handleProjectSelect = (id) => {
-    navigation.navigate('Details', { id });
-  };
-
-  // Filter projects based on selected filters
-  const filteredProjects = projectData.filter(project => {
-    const matchesCategory = !categoryFilter || project.category === categoryFilter;
-    const matchesStatus = !statusFilter || project.status === statusFilter;
-    return matchesCategory && matchesStatus;
-  });
-
-  // Reset all filters
-  const resetFilters = () => {
-    setCategoryFilter(null);
-    setStatusFilter(null);
-  };
+  const renderProjectItem = ({ item }) => (
+    <TouchableOpacity style={styles.projectCard}>
+      <Image source={{ uri: item.image }} style={styles.projectImage} />
+      <View style={styles.projectInfo}>
+        <Text style={styles.projectTitle}>{item.title}</Text>
+        <View style={styles.projectMeta}>
+          <Ionicons name="location-outline" size={16} color="#666" />
+          <Text style={styles.projectLocation}>{item.location}</Text>
+        </View>
+        <View style={styles.projectDetails}>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Status</Text>
+            <Text style={[
+              styles.detailValue,
+              item.status === 'Completed' ? styles.completedStatus : 
+              item.status === 'In Progress' ? styles.inProgressStatus : styles.planningStatus
+            ]}>
+              {item.status}
+            </Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Price</Text>
+            <Text style={styles.detailValue}>{item.price}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Date</Text>
+            <Text style={styles.detailValue}>{item.date}</Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Projects</Text>
-      
-      {/* Filter Section */}
-      <View style={styles.filterContainer}>
-        <Text style={styles.filterTitle}>Filters:</Text>
+    <ScrollView style={styles.container}>
+      {/* Profile Header */}
+      <View style={styles.profileHeader}>
+        <Image 
+          source={{ uri: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80' }}
+          style={styles.profileImage}
+        />
+        <Text style={styles.profileName}>John Developer</Text>
+        <Text style={styles.profileTitle}>Real Estate Developer</Text>
         
-        {/* Category Filter */}
-        <View style={styles.filterGroup}>
-          <Text style={styles.filterLabel}>Category:</Text>
-          <Pressable 
-            style={[styles.filterButton, categoryFilter === null && styles.activeFilter]}
-            onPress={() => setCategoryFilter(null)}
-          >
-            <Text style={styles.filterButtonText}>All</Text>
-          </Pressable>
-          <Pressable 
-            style={[styles.filterButton, categoryFilter === 'Luxury' && styles.activeFilter]}
-            onPress={() => setCategoryFilter('Luxury')}
-          >
-            <Text style={styles.filterButtonText}>Luxury</Text>
-          </Pressable>
-          <Pressable 
-            style={[styles.filterButton, categoryFilter === 'Affordable' && styles.activeFilter]}
-            onPress={() => setCategoryFilter('Affordable')}
-          >
-            <Text style={styles.filterButtonText}>Affordable</Text>
-          </Pressable>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>{projects.length}</Text>
+            <Text style={styles.statLabel}>Projects</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>2</Text>
+            <Text style={styles.statLabel}>Completed</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>$5.25M</Text>
+            <Text style={styles.statLabel}>Total Value</Text>
+          </View>
         </View>
-        
-        {/* Status Filter */}
-        <View style={styles.filterGroup}>
-          <Text style={styles.filterLabel}>Status:</Text>
-          <Pressable 
-            style={[styles.filterButton, statusFilter === null && styles.activeFilter]}
-            onPress={() => setStatusFilter(null)}
-          >
-            <Text style={styles.filterButtonText}>All</Text>
-          </Pressable>
-          <Pressable 
-            style={[styles.filterButton, statusFilter === 'Ongoing' && styles.activeFilter]}
-            onPress={() => setStatusFilter('Ongoing')}
-          >
-            <Text style={styles.filterButtonText}>Ongoing</Text>
-          </Pressable>
-          <Pressable 
-            style={[styles.filterButton, statusFilter === 'Completed' && styles.activeFilter]}
-            onPress={() => setStatusFilter('Completed')}
-          >
-            <Text style={styles.filterButtonText}>Completed</Text>
-          </Pressable>
-        </View>
-        
-        {/* Reset Button */}
-        {(categoryFilter || statusFilter) && (
-          <Pressable style={styles.resetButton} onPress={resetFilters}>
-            <Text style={styles.resetButtonText}>Reset Filters</Text>
-          </Pressable>
-        )}
       </View>
-      
-      {/* Projects Count */}
-      <Text style={styles.resultsText}>
-        Showing {filteredProjects.length} of {projectData.length} projects
-      </Text>
-      
-      {/* Projects List */}
-      <FlatList
-        data={filteredProjects}
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            onPress={() => handleProjectSelect(item.id)} 
-            style={styles.projectCard}
-          >
-            <Text style={styles.projectTitle}>{item.title}</Text>
-            <View style={styles.projectDetails}>
-              <Text style={styles.projectDetail}>{item.location}</Text>
-              <Text style={[styles.projectDetail, styles.projectStatus]}>
-                {item.status} • {item.category}
-              </Text>
-            </View>
-            <Text style={styles.projectPrice}>${item.price.toLocaleString()}</Text>
+
+      {/* Projects Section */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>My Projects</Text>
+          <TouchableOpacity>
+            <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={
-          <Text style={styles.noResultsText}>No projects match your filters</Text>
-        }
-      />
-    </View>
+        </View>
+        
+        <FlatList
+          data={projects}
+          renderItem={renderProjectItem}
+          keyExtractor={item => item.id}
+          scrollEnabled={false}
+          contentContainerStyle={styles.projectsList}
+        />
+      </View>
+
+      {/* Recent Activity */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Recent Activity</Text>
+        <View style={styles.activityItem}>
+          <View style={styles.activityIcon}>
+            <Ionicons name="document-text-outline" size={20} color="#4CAF50" />
+          </View>
+          <View style={styles.activityContent}>
+            <Text style={styles.activityText}>Added new project "Urban Loft Apartments"</Text>
+            <Text style={styles.activityDate}>2 days ago</Text>
+          </View>
+        </View>
+        <View style={styles.activityItem}>
+          <View style={styles.activityIcon}>
+            <Ionicons name="checkmark-done-outline" size={20} color="#2196F3" />
+          </View>
+          <View style={styles.activityContent}>
+            <Text style={styles.activityText}>Completed "Luxury Waterfront Condos"</Text>
+            <Text style={styles.activityDate}>1 month ago</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#111',
+    backgroundColor: '#f8f9fa',
   },
-  header: {
-    color: '#fff',
+  profileHeader: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 15,
+  },
+  profileName: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 5,
   },
-  filterContainer: {
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: '#222',
-    borderRadius: 10,
-  },
-  filterTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  filterGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    marginBottom: 10,
-  },
-  filterLabel: {
-    color: '#ccc',
-    marginRight: 10,
-    width: 70,
-  },
-  filterButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#333',
-    borderRadius: 15,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  activeFilter: {
-    backgroundColor: '#555',
-  },
-  filterButtonText: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  resetButton: {
-    alignSelf: 'flex-end',
-    padding: 8,
-  },
-  resetButtonText: {
-    color: '#4CAF50',
-    fontSize: 14,
-  },
-  resultsText: {
-    color: '#aaa',
-    marginBottom: 15,
-    fontSize: 14,
-  },
-  noResultsText: {
-    color: '#aaa',
-    textAlign: 'center',
-    marginTop: 20,
+  profileTitle: {
     fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
   },
-  projectCard: {
-    backgroundColor: '#222',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingVertical: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
   },
-  projectTitle: {
-    color: '#fff',
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  section: {
+    backgroundColor: '#fff',
+    marginTop: 10,
+    padding: 20,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+  },
+  seeAll: {
+    color: '#4CAF50',
+    fontWeight: '600',
+  },
+  projectsList: {
+    paddingBottom: 10,
+  },
+  projectCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  projectImage: {
+    width: '100%',
+    height: 180,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  projectInfo: {
+    padding: 15,
+  },
+  projectTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  projectMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  projectLocation: {
+    marginLeft: 5,
+    color: '#666',
   },
   projectDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  detailItem: {
+    alignItems: 'center',
+  },
+  detailLabel: {
+    fontSize: 12,
+    color: '#999',
     marginBottom: 5,
   },
-  projectDetail: {
-    color: '#aaa',
+  detailValue: {
     fontSize: 14,
+    fontWeight: '600',
   },
-  projectStatus: {
+  completedStatus: {
     color: '#4CAF50',
   },
-  projectPrice: {
+  inProgressStatus: {
     color: '#FFC107',
-    fontSize: 16,
-    fontWeight: 'bold',
+  },
+  planningStatus: {
+    color: '#2196F3',
+  },
+  activityItem: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  activityIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  activityContent: {
+    flex: 1,
+  },
+  activityText: {
+    fontSize: 15,
+    marginBottom: 3,
+  },
+  activityDate: {
+    fontSize: 13,
+    color: '#999',
   },
 });
 
-export default HomeScreen;
+export default ProfilePage; 
