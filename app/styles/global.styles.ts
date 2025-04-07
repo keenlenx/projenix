@@ -411,9 +411,8 @@ export const styles = StyleSheet.create({
 
   // Search
   searchWrapper: {
-    position: 'absolute',
-    top: 60,
-    left: 0,
+    position: 'sticky',
+    alignItems: 'center',
     right: 0,
     zIndex: 999,
     paddingHorizontal: 20,
