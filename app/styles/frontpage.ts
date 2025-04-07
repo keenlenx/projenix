@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
   // src/screens/RealEstateLanding/RealEstateLanding.styles.ts
  import { Colors } from '@/constants/theme';
+import HomeScreen from '../(tabs)/Projects';
 
 
 export const styles = StyleSheet.create({
@@ -117,3 +118,4 @@ export const styles = StyleSheet.create({
 
   // ... rest of your styles ...
 });
+export default styles;

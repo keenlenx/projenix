@@ -17,8 +17,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Fuse from 'fuse.js';
 import { debounce } from 'lodash';
+import styles from '../styles/global.styles';
+import cardstyles from '../styles/projectstyles';
+import { Colors } from '@/constants/Colors';
 
 import projectData from '../../assets/projects.json';
+const projectstyles = styles;
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -120,7 +124,7 @@ const HomeScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Hero Slider */}
         <View style={styles.heroContainer}>
-          <Text style={styles.heroTitle}>Featured Projects</Text>
+          {/* <Text style={styles.heroTitle}>Featured Projects</Text> */}
           <Animated.ScrollView
             horizontal
             pagingEnabled
@@ -134,7 +138,7 @@ const HomeScreen = () => {
               <TouchableOpacity key={project.id} onPress={() => handleProjectSelect(project.id)} style={styles.heroCard}>
                 <Image source={{ uri: project.image }} style={styles.heroImage} />
                 <View style={styles.heroOverlay}>
-                  <Text style={styles.heroOverlayTitle}>{project.title}</Text>
+                  <Text style={[styles.heroOverlayTitle,Colors.featureHead]}>{project.title}</Text>
                   <Text style={styles.heroOverlaySubtitle}>{project.location}</Text>
                 </View>
               </TouchableOpacity>
@@ -219,8 +223,8 @@ const HomeScreen = () => {
                         <TouchableOpacity onPress={() => handleProjectSelect(item.id)} style={styles.projectCard}>
                           <Image source={{ uri: item.image }} style={styles.projectImage} />
                           <Text style={styles.projectTitle}>{item.title}</Text>
-                          <Text style={styles.projectLocation}>{item.location}</Text>
-                          <Text style={styles.projectDetail}>{item.status} • {item.category}</Text>
+                          <Text style={styles.projectTitle}>{item.location}</Text>
+                          <Text style={[styles.projectDetail,styles.projectStatus]}>{item.status} • {item.category}</Text>
                           <Text style={styles.projectPrice}>${item.price.toLocaleString()}</Text>
                         </TouchableOpacity>
                       )}
@@ -236,193 +240,5 @@ const HomeScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#111',
-  },
-  scrollContent: {
-    paddingTop: 20,
-    paddingBottom: 100, // to add extra space at the bottom
-  },
-  heroContainer: {
-    width: screenWidth,
-    height: 280,
-    marginBottom: 20,
-    position: 'relative',
-  },
-  heroTitle: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-  heroCard: {
-    width: screenWidth,
-    height: 280,
-    position: 'relative',
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 12,
-  },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 10,
-    left: 20,
-    right: 20,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    padding: 12,
-    borderRadius: 10,
-  },
-  heroOverlayTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  heroOverlaySubtitle: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  searchWrapper: {
-    position: 'absolute',
-    top: 60,
-    left: 0,
-    right: 0,
-    zIndex: 999,
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  searchFilterBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#333',
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  searchInput: {
-    flex: 1,
-    color: '#fff',
-    fontSize: 16,
-  },
-  clearIcon: {
-    paddingLeft: 10,
-  },
-  filterIcon: {
-    paddingLeft: 10,
-  },
-  filterContainer: {
-    marginVertical: 20,
-    paddingHorizontal: 20,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    paddingTop: 10,
-  },
-  filterTitle: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  filterGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  filterLabel: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  filterButton: {
-    backgroundColor: '#444',
-    padding: 10,
-    marginHorizontal: 8,
-    borderRadius: 12,
-  },
-  activeFilter: {
-    backgroundColor: '#007bff',
-  },
-  filterButtonText: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  resultsText: {
-    color: '#fff',
-    fontSize: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  groupSection: {
-    marginVertical: 10,
-    paddingHorizontal: 20,
-  },
-  groupTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  projectCard: {
-    width: 200,
-    marginRight: 15,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  projectImage: {
-    width: '100%',
-    height: 120,
-    borderRadius: 8,
-  },
-  projectTitle: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 5,
-  },
-  projectLocation: {
-    color: '#bbb',
-    fontSize: 12,
-  },
-  projectDetail: {
-    color: '#bbb',
-    fontSize: 12,
-    marginVertical: 5,
-  },
-  projectPrice: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  emptyStateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40,
-    marginTop: 30,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 15,
-    marginHorizontal: 20,
-  },
-  emptyEmoji: { fontSize: 48, marginBottom: 8 },
-  emptyTitle: { fontSize: 20, color: '#fff', fontWeight: 'bold' },
-  emptyDescription: { color: '#aaa', fontSize: 14, textAlign: 'center', marginTop: 5 },
-  emptyBullet: { color: '#888', fontSize: 13, marginTop: 4 },
-  resetAllButton: {
-    marginTop: 15,
-    backgroundColor: '#007bff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  resetAllButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-});
 
 export default HomeScreen;
