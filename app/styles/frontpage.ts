@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
   // src/screens/RealEstateLanding/RealEstateLanding.styles.ts
  import { Colors } from '@/constants/theme';
-import HomeScreen from '../(tabs)/Projects';
+import HomeScreen from '../Projects';
 
 
 export const styles = StyleSheet.create({

@@ -5,14 +5,19 @@ import { Colors, FontSizes, Spacing, BorderRadius, Shadows } from '@/constants/t
 const { width: screenWidth } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
+  /* In your global CSS file */
+ 
+ 
   safeArea: {
-    flex: 1,
     backgroundColor: '#0F0F0F',
   },
+    
   container: {
     flex: 1,
+    
     backgroundColor: '#0F0F0F',
     paddingTop: 20,
+    
   },
   // Image handling styles
   imageContainer: {
@@ -114,11 +119,6 @@ export const styles = StyleSheet.create({
       width: screenWidth,
       height: 280,
       position: 'relative',
-    },
-    heroImage: {
-      width: '100%',
-      height: '100%',
-      borderRadius: 12,
     },
     heroOverlay: {
       position: 'absolute',
@@ -301,12 +301,6 @@ export const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-  },
-  projectImage: {
-    width: '100%',
-    height: 180,
-    borderRadius: 10,
-    marginBottom: 10,
   },
   projectTitle: {
     color: '#fff',

@@ -9,9 +9,9 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/projectstyles';
+import styles from './styles/projectstyles';
 // Sample data (replace with actual data fetching if needed)
-import projectData from '../../assets/projects.json';
+import projectData from '../assets/projects.json';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
